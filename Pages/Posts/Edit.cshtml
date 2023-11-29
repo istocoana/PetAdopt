@@ -1,0 +1,50 @@
+﻿@page
+@model PetAdopt.Pages.Posts.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Post</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Post.id" />
+            <div class="form-group">
+                <label asp-for="Post.title" class="control-label"></label>
+                <input asp-for="Post.title" class="form-control" />
+                <span asp-validation-for="Post.title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Post.description" class="control-label"></label>
+                <input asp-for="Post.description" class="form-control" />
+                <span asp-validation-for="Post.description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Post.Type" class="control-label"></label>
+                <select asp-for="Post.Type" class="form-control"></select>
+                <span asp-validation-for="Post.Type" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Post.animalID" class="control-label"></label>
+                <select asp-for="Post.animalID" class="form-control" asp-items="ViewBag.animalID"></select>
+                <span asp-validation-for="Post.animalID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
