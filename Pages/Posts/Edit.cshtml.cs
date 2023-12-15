@@ -1,55 +1,69 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PetAdopt.Data;
 using PetAdopt.Models;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace PetAdopt.Pages.Posts
 {
     public class EditModel : PageModel
     {
-        private readonly PetAdopt.Data.PetAdoptContext _context;
-
-        public EditModel(PetAdopt.Data.PetAdoptContext context)
-        {
-            _context = context;
-        }
+        private readonly PetAdoptContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
         [BindProperty]
-        public Post Post { get; set; } = default!;
+        public IFormFile Image { get; set; }
+
+        [BindProperty]
+        public Post Post { get; set; }
+
+        public EditModel(PetAdoptContext context, IWebHostEnvironment webHostEnvironment)
+        {
+            _context = context;
+            _webHostEnvironment = webHostEnvironment;
+        }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Post == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var post =  await _context.Post.FirstOrDefaultAsync(m => m.id == id);
-            if (post == null)
+            Post = await _context.Post.FirstOrDefaultAsync(m => m.id == id);
+
+            if (Post == null)
             {
                 return NotFound();
             }
-            Post = post;
-           ViewData["animalID"] = new SelectList(_context.Animal, "id", "id");
+
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
+          
+            var postToUpdate = await _context.Post.FindAsync(Post.id);
+
+            if (postToUpdate == null)
             {
-                return Page();
+                return NotFound();
             }
 
-            _context.Attach(Post).State = EntityState.Modified;
+            postToUpdate.title = Post.title;
+            postToUpdate.description = Post.description;
+            postToUpdate.Type = Post.Type;
+
+            if (Image != null && Image.Length > 0)
+            {
+                postToUpdate.ImageFile = await SaveImageAndGetURL(Image);
+            }
 
             try
             {
@@ -67,12 +81,32 @@ namespace PetAdopt.Pages.Posts
                 }
             }
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("/Posts/Index");
         }
 
         private bool PostExists(int id)
         {
-          return (_context.Post?.Any(e => e.id == id)).GetValueOrDefault();
+            return _context.Post.Any(e => e.id == id);
+        }
+
+        private async Task<string> SaveImageAndGetURL(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return null;
+            }
+
+            var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
+            var uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(file.FileName);
+            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(fileStream);
+            }
+
+            return "/images/" + uniqueFileName;
         }
     }
 }
+

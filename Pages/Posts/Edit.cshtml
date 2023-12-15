@@ -1,4 +1,5 @@
 ﻿@page
+@using PetAdopt.Models
 @model PetAdopt.Pages.Posts.EditModel
 
 @{
@@ -11,7 +12,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Post.id" />
             <div class="form-group">
@@ -26,14 +27,22 @@
             </div>
             <div class="form-group">
                 <label asp-for="Post.Type" class="control-label"></label>
-                <select asp-for="Post.Type" class="form-control"></select>
+                <select asp-for="Post.Type" class="form-control">
+                    @foreach (var postType in Enum.GetValues(typeof(PostType)))
+                    {
+                        <option value="@postType">@postType</option>
+                    }
+                </select>
                 <span asp-validation-for="Post.Type" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="Post.animalID" class="control-label"></label>
-                <select asp-for="Post.animalID" class="form-control" asp-items="ViewBag.animalID"></select>
-                <span asp-validation-for="Post.animalID" class="text-danger"></span>
+                <label asp-for="Image" class="control-label"></label>
+                <input asp-for="Image" type="file" class="form-control" />
+                <span asp-validation-for="Image" class="text-danger"></span>
             </div>
+
+
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

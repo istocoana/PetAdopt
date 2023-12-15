@@ -16,6 +16,6 @@ namespace PetAdopt.Data
 
         public DbSet<PetAdopt.Models.Animal> Animal { get; set; } = default!;
 
-        public DbSet<PetAdopt.Models.Post>? Post { get; set; }
+        public DbSet<PetAdopt.Models.Post> Post { get; set; }
     }
 }
