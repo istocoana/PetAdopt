@@ -25,6 +25,13 @@
                 <input asp-for="Post.description" class="form-control" />
                 <span asp-validation-for="Post.description" class="text-danger"></span>
             </div>
+
+            <div class="form-group">
+                <label asp-for="Post.Location" class="control-label"></label>
+                <input asp-for="Post.Location" class="form-control" />
+                <span asp-validation-for="Post.Location" class="text-danger"></span>
+            </div>
+
             <div class="form-group">
                 <label asp-for="Post.Type" class="control-label"></label>
                 <select asp-for="Post.Type" class="form-control">
@@ -38,9 +45,9 @@
 
             <div class="form-group">
                 <label asp-for="Image" class="control-label"></label>
-                <input asp-for="Image" type="file" class="form-control" />
-                <span asp-validation-for="Image" class="text-danger"></span>
+                <input id="imageInput" type="file" class="form-control" />
             </div>
+
 
 
             <div class="form-group">
@@ -56,4 +63,13 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.getElementById('imageInput').addEventListener('change', function () {
+            if (this.files && this.files.length > 0) {
+                this.setAttribute('required', 'required');
+            } else {
+                this.removeAttribute('required');
+            }
+        });
+    </script>
 }

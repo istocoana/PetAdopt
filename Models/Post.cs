@@ -12,10 +12,12 @@ namespace PetAdopt.Models
         [Required(ErrorMessage = "Câmpul descriere este obligatoriu.")]
         [MinLength(10, ErrorMessage = "Descrierea trebuie să aibă cel puțin 10 caractere.")]
         public string description { get; set; }
+
+        public string Location { get; set; }
+
         public PostType Type { get; set; }
         public int animalID { get; set; }
         public Animal Animal { get; set; }
-
         public string ImageFile{ get; set; }
 
        

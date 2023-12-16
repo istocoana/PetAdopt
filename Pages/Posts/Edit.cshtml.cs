@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using PetAdopt.Data;
 using PetAdopt.Models;
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
@@ -17,6 +18,7 @@ namespace PetAdopt.Pages.Posts
         private readonly PetAdoptContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
+        [NotMapped]
         [BindProperty]
         public IFormFile Image { get; set; }
 
@@ -48,7 +50,6 @@ namespace PetAdopt.Pages.Posts
 
         public async Task<IActionResult> OnPostAsync()
         {
-          
             var postToUpdate = await _context.Post.FindAsync(Post.id);
 
             if (postToUpdate == null)
@@ -59,10 +60,15 @@ namespace PetAdopt.Pages.Posts
             postToUpdate.title = Post.title;
             postToUpdate.description = Post.description;
             postToUpdate.Type = Post.Type;
+            postToUpdate.Location = Post.Location;
 
             if (Image != null && Image.Length > 0)
             {
                 postToUpdate.ImageFile = await SaveImageAndGetURL(Image);
+            }
+            else
+            {
+                postToUpdate.ImageFile = postToUpdate.ImageFile;
             }
 
             try
@@ -83,6 +89,7 @@ namespace PetAdopt.Pages.Posts
 
             return RedirectToPage("/Posts/Index");
         }
+
 
         private bool PostExists(int id)
         {

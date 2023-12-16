@@ -28,20 +28,18 @@
             <th>
                 @Html.DisplayNameFor(model => model.Post[0].Animal)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Post[0].Location)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
     @foreach (var item in Model.Post) {
         <tr>
-                <td>
-                    <img src="@item.ImageFile" alt="Post Image" style="max-width: 100px; max-height: 100px;" />
-                </td>
-                <td>
-                    <a asp-page="./Edit" asp-route-id="@item.id">Edit</a> |
-                    <a asp-page="./Details" asp-route-id="@item.id">Details</a> |
-                    <a asp-page="./Delete" asp-route-id="@item.id">Delete</a>
-                </td>
+            <td>
+                <img src="@item.ImageFile" alt="Post Image" style="max-width: 100px; max-height: 100px;" />
+            </td
             <td>
                 @Html.DisplayFor(modelItem => item.title)
             </td>
@@ -53,6 +51,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Animal.id)
+            </td>
+             <td>
+                @Html.DisplayFor(modelItem => item.Location)
             </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.id">Edit</a> |

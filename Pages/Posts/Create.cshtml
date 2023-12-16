@@ -20,6 +20,12 @@
     </div>
 
     <div class="form-group">
+        <label asp-for="Post.Location" class="control-label"></label>
+        <input asp-for="Post.Location" class="form-control" />
+        <span asp-validation-for="Post.Location" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
         <label asp-for="Post.animalID" class="control-label">Select an animal:</label>
         <select asp-for="Post.animalID" class="form-control" asp-items="@Model.AnimalsSelectList"></select>
         <span asp-validation-for="Post.animalID" class="text-danger"></span>
