@@ -1,52 +1,59 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PetAdopt.Data;
 using PetAdopt.Models;
+using System.Security.Claims;
 
 namespace PetAdopt.Pages.Animals
 {
     public class EditModel : PageModel
     {
-        private readonly PetAdopt.Data.PetAdoptContext _context;
+        private readonly PetAdoptContext _context;
 
-        public EditModel(PetAdopt.Data.PetAdoptContext context)
+        public EditModel(PetAdoptContext context)
         {
             _context = context;
         }
 
         [BindProperty]
-        public Animal Animal { get; set; } = default!;
+        public Animal Animal { get; set; }
+
+        [BindProperty]
+        public AnimalSpecies SelectedSpecies { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Animal == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var animal =  await _context.Animal.FirstOrDefaultAsync(m => m.id == id);
-            if (animal == null)
+            // Obține ID-ul utilizatorului curent
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            Animal = await _context.Animal.FirstOrDefaultAsync(m => m.id == id && m.UserId == userId);
+
+            if (Animal == null)
             {
                 return NotFound();
             }
-            Animal = animal;
+
+            SelectedSpecies = Animal.animal_speacies;
+
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
                 return Page();
             }
+
+            // Actualizarea proprietății animal_speacies cu specia selectată
+            Animal.animal_speacies = SelectedSpecies;
 
             _context.Attach(Animal).State = EntityState.Modified;
 
@@ -71,7 +78,7 @@ namespace PetAdopt.Pages.Animals
 
         private bool AnimalExists(int id)
         {
-          return (_context.Animal?.Any(e => e.id == id)).GetValueOrDefault();
+            return _context.Animal.Any(e => e.id == id);
         }
     }
 }

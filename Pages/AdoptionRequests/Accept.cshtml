@@ -1,0 +1,14 @@
+﻿@page
+@model PetAdopt.Pages.AdoptionRequests.AcceptModel
+@{
+}
+<h1>Accept Adoption Request</h1>
+
+<form method="post">
+    <div class="form-group">
+        <label for="Message">Message:</label>
+        <textarea class="form-control" id="Message" asp-for="AcceptanceMessage"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Accept Request</button>
+</form>

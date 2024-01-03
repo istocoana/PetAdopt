@@ -17,5 +17,18 @@ namespace PetAdopt.Data
         public DbSet<PetAdopt.Models.Animal> Animal { get; set; } = default!;
 
         public DbSet<PetAdopt.Models.Post> Post { get; set; }
+        public DbSet<PetAdopt.Models.AdoptionRequest> AdoptionRequest { get; set; }
+
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Animal>()
+                .HasOne(a => a.User)
+                .WithMany()
+                .HasForeignKey(a => a.UserId)
+                .IsRequired(true);
+        }
     }
 }

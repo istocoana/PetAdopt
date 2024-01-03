@@ -1,0 +1,13 @@
+﻿@page
+@model PetAdopt.Pages.AdoptionRequests.DetailsModel
+@{
+}
+<h1>Adoption Request Details</h1>
+
+<div>
+    <p><strong>Animal Name:</strong> @Model.AdoptionRequest.Post.Animal.animal_name</p>
+    <p><strong>User Email:</strong> @Model.AdoptionRequest.User.Email</p>
+
+
+    <a asp-page="./Accept" asp-route-id="@Model.AdoptionRequest.Id">Accept Request</a>
+</div>

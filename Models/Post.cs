@@ -1,4 +1,5 @@
-﻿using PetAdopt.Models;
+﻿using Microsoft.AspNetCore.Identity;
+using PetAdopt.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -20,7 +21,13 @@ namespace PetAdopt.Models
         public Animal Animal { get; set; }
         public string ImageFile{ get; set; }
 
-       
+        public string UserId { get; set; }
+        public IdentityUser User { get; set; }
+
+        public bool IsAdopted { get; set; }
+        public List<AdoptionRequest> AdoptionRequests { get; set; }
+
+
     }
 
 

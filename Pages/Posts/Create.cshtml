@@ -1,4 +1,6 @@
 ﻿@page
+@using System.Security.Claims
+
 @model PetAdopt.Pages.Posts.CreateModel
 @{
     ViewData["Title"] = "Create";
@@ -7,6 +9,9 @@
 <h1>Create a New Post</h1>
 
 <form method="post" enctype="multipart/form-data">
+
+    <input type="hidden" asp-for="Post.UserId" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" />
+
     <div class="form-group">
         <label asp-for="Post.title" class="control-label">Title:</label>
         <input asp-for="Post.title" class="form-control" />

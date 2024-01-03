@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -19,21 +20,24 @@ namespace PetAdopt.Pages.Animals
             _context = context;
         }
 
-      public Animal Animal { get; set; } = default!; 
+      public Animal Animal { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Animal == null)
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (id == null || userId == null || _context.Animal == null)
             {
                 return NotFound();
             }
 
-            var animal = await _context.Animal.FirstOrDefaultAsync(m => m.id == id);
+            var animal = await _context.Animal.FirstOrDefaultAsync(m => m.id == id && m.UserId == userId);
+
             if (animal == null)
             {
                 return NotFound();
             }
-            else 
+            else
             {
                 Animal = animal;
             }

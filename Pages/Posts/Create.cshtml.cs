@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using PetAdopt.Data;
 using PetAdopt.Models;
 using System;
@@ -10,6 +11,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace PetAdopt.Pages.Posts
@@ -26,6 +28,7 @@ namespace PetAdopt.Pages.Posts
         public Post Post { get; set; }
 
         public SelectList AnimalsSelectList { get; set; }
+
         public CreateModel(PetAdoptContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
@@ -33,37 +36,41 @@ namespace PetAdopt.Pages.Posts
             Post = new Post(); // Inițializare a obiectului Post pentru a evita null reference
         }
 
-
-        public IActionResult OnGet()
+        public async Task<IActionResult> OnGetAsync()
         {
-            var animalsWithPosts = _context.Post.Select(p => p.animalID).ToList();
-            var animalsWithoutPosts = _context.Animal.Where(a => !animalsWithPosts.Contains(a.id)).ToList();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); 
 
-            AnimalsSelectList = new SelectList(animalsWithoutPosts, "id", "animal_name");
+            var animalsCreatedByUser = await _context.Animal
+                .Where(a => a.UserId == userId)
+                .ToListAsync();
+
+            AnimalsSelectList = new SelectList(animalsCreatedByUser, "id", "animal_name");
 
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); 
 
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                var animalsWithPosts = _context.Post.Select(p => p.animalID).ToList();
-                var animalsWithoutPosts = _context.Animal.Where(a => !animalsWithPosts.Contains(a.id)).ToList();
+                var animalsCreatedByUser = await _context.Animal
+                    .Where(a => a.UserId == userId)
+                    .ToListAsync();
 
-                AnimalsSelectList = new SelectList(animalsWithoutPosts, "id", "animal_name");
+                AnimalsSelectList = new SelectList(animalsCreatedByUser, "id", "animal_name");
+                return Page();
             }
-
 
             Post.ImageFile = await SaveImageAndGetURL(Image);
 
-          
+            Post.UserId = userId;
+
             _context.Post.Add(Post);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("/Posts/Index");
-           
         }
 
         private async Task<string> SaveImageAndGetURL(IFormFile file)

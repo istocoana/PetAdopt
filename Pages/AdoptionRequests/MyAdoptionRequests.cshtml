@@ -1,0 +1,36 @@
+﻿@page
+@model MyAdoptionRequestsModel
+
+<h1>My Adoption Requests</h1>
+
+@if (Model.UserAdoptionRequests != null && Model.UserAdoptionRequests.Any())
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Animal Name</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var request in Model.UserAdoptionRequests)
+            {
+                <tr>
+                    <td>@request.Post.Animal.animal_name</td>
+                    @if (request.IsAccepted)
+                    {
+                        <p>Status: Accepted</p>
+                    }
+                    else
+                    {
+                        <p>Status: Pending</p>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No adoption requests found.</p>
+}

@@ -1,0 +1,27 @@
+﻿@page
+@model PetAdopt.Pages.AllAdoptionRequestsModel
+@{
+    ViewData["Title"] = "All Adoption Requests";
+}
+
+<h1>All Adoption Requests</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Post</th>
+            <th>Message</th>
+            <th>Is Accepted</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var request in Model.AdoptionRequests)
+        {
+            <tr>
+                <td>@request.PostId</td>
+                <td>@request.Message</td>
+                <td>@request.IsAccepted</td>
+            </tr>
+        }
+    </tbody>
+</table>

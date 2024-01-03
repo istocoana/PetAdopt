@@ -1,0 +1,17 @@
+﻿@page "{id}"
+@model PetAdopt.Pages.Posts.AdoptModel
+
+<h1>Adoptare</h1>
+
+<p> @Model.AdoptionRequest.PostId </p>
+<form method="post">
+    <div class="form-group">
+        <input type="hidden" asp-for="AdoptionRequest.PostId" /> 
+
+        <label for="Message">Mesaj:</label>
+        <textarea id="Message" name="AdoptionRequest.Message" class="form-control" asp-for="AdoptionRequest.Message"></textarea>
+        <span asp-validation-for="AdoptionRequest.Message" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Trimite cererea de adopție</button>
+</form>

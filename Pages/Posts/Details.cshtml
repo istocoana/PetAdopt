@@ -1,4 +1,7 @@
 ﻿@page
+@using System.Security.Claims
+@using PetAdopt.Models;
+
 @model PetAdopt.Pages.Posts.DetailsModel
 
 @{
@@ -57,6 +60,19 @@
     </dl>
 </div>
 <div>
-    <a asp-page="./Edit" asp-route-id="@Model.Post?.id">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
+    @if (User.Identity.IsAuthenticated && Model.Post != null && Model.Post.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
+    {
+        <a asp-page="./Edit" asp-route-id="@Model.Post?.id">Edit</a> 
+        <p>|</p>
+        <a asp-page="./Index">Back to List</a>
+    }
+
+    @if (!Model.Post.IsAdopted)
+    {
+        <div>
+            <form method="get" asp-page="./Adopt" asp-route-id="@Model.Post.id">
+                <button type="submit">Adopt</button>
+            </form>
+        </div>
+    }
 </div>
