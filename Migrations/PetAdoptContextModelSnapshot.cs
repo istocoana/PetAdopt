@@ -82,10 +82,25 @@ namespace PetAdopt.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int>("AnimalId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsAccepted")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -97,6 +112,8 @@ namespace PetAdopt.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AnimalId");
 
                     b.HasIndex("PostId");
 
@@ -186,6 +203,12 @@ namespace PetAdopt.Migrations
 
             modelBuilder.Entity("PetAdopt.Models.AdoptionRequest", b =>
                 {
+                    b.HasOne("PetAdopt.Models.Animal", "Animal")
+                        .WithMany()
+                        .HasForeignKey("AnimalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("PetAdopt.Models.Post", "Post")
                         .WithMany("AdoptionRequests")
                         .HasForeignKey("PostId")
@@ -197,6 +220,8 @@ namespace PetAdopt.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Animal");
 
                     b.Navigation("Post");
 

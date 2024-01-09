@@ -1,27 +1,30 @@
 ﻿@page
 @model PetAdopt.Pages.AllAdoptionRequestsModel
-@{
-    ViewData["Title"] = "All Adoption Requests";
-}
+@using PetAdopt.Models
 
-<h1>All Adoption Requests</h1>
+<h1>Cererile mele de adopție</h1>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Post</th>
-            <th>Message</th>
-            <th>Is Accepted</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var request in Model.AdoptionRequests)
-        {
+@if (Model.AllAdoptionRequests != null && Model.AllAdoptionRequests.Any())
+{
+    <table class="table">
+        <thead>
             <tr>
-                <td>@request.PostId</td>
-                <td>@request.Message</td>
-                <td>@request.IsAccepted</td>
+                <th>Id</th>
+                <th>Location</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var request in Model.AllAdoptionRequests)
+            {
+                <tr>
+                    <td>@request.Id</td>
+                    <td>@request.Location</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Nu există cereri de adopție depuse de utilizatorul curent.</p>
+}

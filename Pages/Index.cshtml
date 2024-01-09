@@ -2,9 +2,37 @@
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
+    <style>
+        body {
+            background-color: #e2e2e2;
+            background-image: url('/images/14710.jpg');
+            background-repeat: no-repeat;
+            background-size: 60%;
+            background-position: bottom right;
+        }
+
+        h1 { 
+            color: orange;
+            font-weight: bolder;
+            font-size: 90px;
+        }
+
+        h3 { 
+            font-size: 30px;
+        }
+
+        .welc{ 
+            width: 100%;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; 
+            align-items: start;
+        }
+    </style>
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="text-start welc">
+    <h3>Welcome to</h3>
+    <h1>PetAdopt</h1>
 </div>

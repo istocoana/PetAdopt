@@ -1,0 +1,52 @@
+﻿@page
+@model PetAdopt.Pages.RequestsModel
+
+<h1>Cererile primite</h1>
+
+<h1>Cererile pentru Anunțurile Mele</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Anunț</th>
+            <th>Cereri</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var post in Model.MyPosts)
+        {
+            <tr>
+                <td>@post.title</td>
+                <td>
+                    <ul>
+                        @foreach (var request in post.AdoptionRequests)
+                        {
+                            <li>
+                                @request.Location 
+                                <br>
+                                @request.Email
+                                <br>
+                                @request.PhoneNumber
+                                <br>
+                                @request.Message
+                                <br>
+                                <br>
+                                <strong>Stare:</strong> @((request.IsAccepted) ? "Acceptat" : "În așteptare")
+                                <br>
+                                @if (!request.IsAccepted)
+                                {
+                                    <form method="post" asp-page-handler="Accept" asp-route-requestId="@request.Id">
+                                        <button type="submit" class="btn btn-success">Acceptă</button>
+                                    </form>
+                                    <form method="post" asp-page-handler="Reject" asp-route-requestId="@request.Id">
+                                        <button type="submit" class="btn btn-danger">Respinge</button>
+                                    </form>
+                                }
+                            </li>
+                        }
+                    </ul>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

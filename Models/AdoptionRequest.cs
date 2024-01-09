@@ -10,6 +10,17 @@ namespace PetAdopt.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        [Required(ErrorMessage = "Câmpul locație este obligatoriu.")]
+        public string Location { get; set; }
+
+        [Required(ErrorMessage = "Câmpul număr de telefon este obligatoriu.")]
+        [Phone(ErrorMessage = "Introduceți un număr de telefon valid.")]
+        public string PhoneNumber { get; set; }
+
+        [Required(ErrorMessage = "Câmpul email este obligatoriu.")]
+        [EmailAddress(ErrorMessage = "Introduceți o adresă de email validă.")]
+        public string Email { get; set; }
+
         [Required]
         public string UserId { get; set; }
 
@@ -18,10 +29,10 @@ namespace PetAdopt.Models
         [Required]
         public int PostId { get; set; } 
 
-        public Post Post { get; set; }
+        public Post? Post { get; set; }
 
         [Required]
-        public string Message { get; set; } 
+        public string? Message { get; set; } 
 
         public bool IsAccepted { get; set; } 
     }

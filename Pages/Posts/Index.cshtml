@@ -1,7 +1,7 @@
 ﻿@page
 @using System.Security.Claims
 @using PetAdopt.Models
-
+@inject Microsoft.AspNetCore.Authorization.IAuthorizationService AuthorizationService
 
 @model PetAdopt.Pages.Posts.IndexModel
 
@@ -17,10 +17,6 @@
 
 
 <form method="get">
-
-    <label for="searchTerm">Search by Title:</label>
-    <input type="text" id="searchTerm" name="searchString" value="" placeholder="Enter first 3 letters..." />
-    <br />
     <label for="animalSpeacies">Select Animal Species:</label>
     <select asp-for="SelectedSpecies" asp-items="Model.SpeciesOptions">
         <option value="">Dog/Cat</option>
@@ -101,17 +97,17 @@
                     @if (User.Identity.IsAuthenticated && item.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
                     {
                         <a asp-page="./Edit" asp-route-id="@item.id">Edit</a> 
-                        <p>|</p>
                         <a asp-page = "./Delete" asp-route-id = "@item.id" > Delete </a>
                     } 
                     else
-                    { 
-                        @if (item.Type == PostType.donation)
+                    {
+                        @if (User.Identity.IsAuthenticated && item.Type == PostType.donation)
                         {
                             <form asp-page="./Adopt" asp-route-id="@item.id" method="post">
                                 <input type="hidden" name="id" value="@item.id" />
                                 <button type="submit">Adopt</button>
                             </form>
+
                         }
                     }
 

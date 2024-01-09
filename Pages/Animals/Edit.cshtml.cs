@@ -5,9 +5,11 @@ using Microsoft.EntityFrameworkCore;
 using PetAdopt.Data;
 using PetAdopt.Models;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PetAdopt.Pages.Animals
 {
+    [Authorize] 
     public class EditModel : PageModel
     {
         private readonly PetAdoptContext _context;
@@ -30,8 +32,7 @@ namespace PetAdopt.Pages.Animals
                 return NotFound();
             }
 
-            // Obține ID-ul utilizatorului curent
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             Animal = await _context.Animal.FirstOrDefaultAsync(m => m.id == id && m.UserId == userId);
 
@@ -47,18 +48,26 @@ namespace PetAdopt.Pages.Animals
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            Animal.UserId = userId; 
+
+            var existingAnimal = await _context.Animal.FindAsync(Animal.id);
+
+            if (existingAnimal == null)
             {
-                return Page();
+                return NotFound();
             }
 
-            // Actualizarea proprietății animal_speacies cu specia selectată
-            Animal.animal_speacies = SelectedSpecies;
-
-            _context.Attach(Animal).State = EntityState.Modified;
+            existingAnimal.animal_speacies = SelectedSpecies;
+            existingAnimal.animal_breed = Animal.animal_breed;
+            existingAnimal.animal_age = Animal.animal_age;
+            existingAnimal.animal_name = Animal.animal_name;
 
             try
             {
+                _context.Attach(existingAnimal).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)

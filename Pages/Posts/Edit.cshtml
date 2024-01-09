@@ -11,8 +11,14 @@
 <h4>Post</h4>
 <hr />
 <div class="row">
+    @if (!string.IsNullOrEmpty(Model.Post.ImageFile))
+    {
+        <img src="@Model.Post.ImageFile" alt="Current Image" style="max-width: 400px;" />
+
+        <br />
+    }
     <div class="col-md-4">
-        <form method="post" enctype="multipart/form-data">
+        <form method="post" enctype="multipart/form-data" id="postForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Post.id" />
             <div class="form-group">
@@ -43,11 +49,27 @@
                 <span asp-validation-for="Post.Type" class="text-danger"></span>
             </div>
 
+            <!--
             <div class="form-group">
                 <label asp-for="Image" class="control-label"></label>
-                <input id="imageInput" type="file" class="form-control" />
-            </div>
+                <input asp-for="Image" type="file" class="form-control" id="imageInput" name="Image">
+                       </div>
+             -->
 
+            <div class="form-group">
+                <label>
+                    Vrei să editezi imaginea?
+                    <input asp-for="EditImage" type="checkbox" class="form-check-input" id="editImageCheckbox" />
+                </label>
+             </div>  
+
+        <div id="imageUploadField" style="display:none;">
+            <div class="form-group">
+                <label asp-for="Image" class="control-label"></label>
+                <input asp-for="Image" type="file" class="form-control" id="imageInput" name="Image">
+                <span asp-validation-for="Image" class="text-danger"></span>
+            </div>
+        </div>
 
 
             <div class="form-group">
@@ -63,13 +85,12 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <partial name="_ValidationScriptsPartial" />
     <script>
-        document.getElementById('imageInput').addEventListener('change', function () {
-            if (this.files && this.files.length > 0) {
-                this.setAttribute('required', 'required');
-            } else {
-                this.removeAttribute('required');
-            }
+        document.getElementById('editImageCheckbox').addEventListener('change', function () {
+            var imageUploadField = document.getElementById('imageUploadField');
+            imageUploadField.style.display = this.checked ? 'block' : 'none';
         });
     </script>
+
 }

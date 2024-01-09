@@ -1,4 +1,5 @@
 ﻿@page
+@using System.Security.Claims;
 @model PetAdopt.Pages.Animals.EditModel
 
 @{
@@ -13,6 +14,7 @@
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Animal.UserId" value="@User.FindFirst(ClaimTypes.NameIdentifier)?.Value" />
             <input type="hidden" asp-for="Animal.id" />
             <div class="form-group">
                 <label asp-for="SelectedSpecies" class="control-label"></label>

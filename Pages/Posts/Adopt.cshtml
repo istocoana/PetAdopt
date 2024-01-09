@@ -3,13 +3,40 @@
 
 <h1>Adoptare</h1>
 
-<p> @Model.AdoptionRequest.PostId </p>
-<form method="post">
-    <div class="form-group">
-        <input type="hidden" asp-for="AdoptionRequest.PostId" /> 
+@if (Model.Post != null)
+{
+    <p>Titlu: @Model.Post.title</p>
+    <img src="@Model.Post.ImageFile" alt="Post Image" style="max-width: 100px; max-height: 100px;" />
+}
+else
+{
+    <p>Detaliile despre anunț nu au fost găsite.</p>
+}
 
-        <label for="Message">Mesaj:</label>
-        <textarea id="Message" name="AdoptionRequest.Message" class="form-control" asp-for="AdoptionRequest.Message"></textarea>
+<form method="post">
+    <input type="hidden" asp-for="AdoptionRequest.PostId" value="@Model.Post.id" />
+
+    <div class="form-group">
+        <label asp-for="AdoptionRequest.Location"></label>
+        <input asp-for="AdoptionRequest.Location" class="form-control" />
+        <span asp-validation-for="AdoptionRequest.Location" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="AdoptionRequest.PhoneNumber"></label>
+        <input asp-for="AdoptionRequest.PhoneNumber" class="form-control" />
+        <span asp-validation-for="AdoptionRequest.PhoneNumber" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="Email">Email:</label>
+        <input id="Email" name="AdoptionRequest.Email" class="form-control" type="email" required />
+    </div>
+
+
+    <div class="form-group">
+        <label asp-for="AdoptionRequest.Message"></label>
+        <textarea asp-for="AdoptionRequest.Message" class="form-control"></textarea>
         <span asp-validation-for="AdoptionRequest.Message" class="text-danger"></span>
     </div>
 

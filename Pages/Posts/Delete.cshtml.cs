@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,15 +12,16 @@ using PetAdopt.Models;
 
 namespace PetAdopt.Pages.Posts
 {
-    [Authorize(Policy = "EditOrDeletePolicy")]
 
     public class DeleteModel : PageModel
     {
         private readonly PetAdopt.Data.PetAdoptContext _context;
+        private readonly IAuthorizationService _authorizationService;
 
-        public DeleteModel(PetAdopt.Data.PetAdoptContext context)
+        public DeleteModel(PetAdopt.Data.PetAdoptContext context, IAuthorizationService authorizationService)
         {
             _context = context;
+            _authorizationService = authorizationService;
         }
 
         [BindProperty]
@@ -41,6 +43,16 @@ namespace PetAdopt.Pages.Posts
             else 
             {
                 Post = post;
+            }
+
+            if (Post.UserId != User.FindFirst(ClaimTypes.NameIdentifier)?.Value)
+            {
+                var authorizationResult = await _authorizationService.AuthorizeAsync(User, null, "EditOrDeletePolicy");
+
+                if (!authorizationResult.Succeeded)
+                {
+                    return new StatusCodeResult(StatusCodes.Status403Forbidden);
+                }
             }
             return Page();
         }

@@ -19,8 +19,7 @@ namespace PetAdopt.Models
         public PostType Type { get; set; }
         public int animalID { get; set; }
         public Animal Animal { get; set; }
-        public string ImageFile{ get; set; }
-
+        public string ImageFile { get; set; }
         public string UserId { get; set; }
         public IdentityUser User { get; set; }
 
