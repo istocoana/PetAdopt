@@ -2,27 +2,30 @@
 @model PetAdopt.Pages.AllAdoptionRequestsModel
 @using PetAdopt.Models
 
-<h1>Cererile mele de adopție</h1>
+<h1>Cererile de adopție depuse</h1>
 
 @if (Model.AllAdoptionRequests != null && Model.AllAdoptionRequests.Any())
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Location</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var request in Model.AllAdoptionRequests)
-            {
-                <tr>
-                    <td>@request.Id</td>
-                    <td>@request.Location</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    @foreach (var request in Model.AllAdoptionRequests)
+    {
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Cerere de adopție # @request.Id</h5>
+                <p class="card-text">Locație: @request.Location</p>
+                <p class="card-text">Detalii Anunț: <a href="/Posts/Details?id=@request.Post.id">@request.Post.title</a></p>
+                <p class="card-text">
+                    @if (request.IsAccepted)
+                    {
+                        <span class="text-success">Status: Acceptat</span>
+                    }
+                    else
+                    {
+                        <span class="text-danger">Status: În așteptare</span>
+                    }
+                </p>
+            </div>
+        </div>
+    }
 }
 else
 {

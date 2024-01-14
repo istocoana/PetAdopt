@@ -32,6 +32,7 @@ namespace PetAdopt.Pages
 
             AllAdoptionRequests = await _context.AdoptionRequest
                 .Where(ar => ar.UserId == currentUser.Id)
+                .Include(ar => ar.Post)
                 .ToListAsync();
         }
     }

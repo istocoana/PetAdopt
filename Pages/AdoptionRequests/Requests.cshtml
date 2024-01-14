@@ -1,52 +1,49 @@
 ﻿@page
+@using PetAdopt.Models;
 @model PetAdopt.Pages.RequestsModel
 
-<h1>Cererile primite</h1>
+<h1>Cererile de adoptie primite</h1>
 
-<h1>Cererile pentru Anunțurile Mele</h1>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>Anunț</th>
-            <th>Cereri</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var post in Model.MyPosts)
-        {
-            <tr>
-                <td>@post.title</td>
-                <td>
-                    <ul>
-                        @foreach (var request in post.AdoptionRequests)
-                        {
-                            <li>
-                                @request.Location 
-                                <br>
-                                @request.Email
-                                <br>
-                                @request.PhoneNumber
-                                <br>
-                                @request.Message
-                                <br>
-                                <br>
-                                <strong>Stare:</strong> @((request.IsAccepted) ? "Acceptat" : "În așteptare")
-                                <br>
-                                @if (!request.IsAccepted)
-                                {
-                                    <form method="post" asp-page-handler="Accept" asp-route-requestId="@request.Id">
-                                        <button type="submit" class="btn btn-success">Acceptă</button>
-                                    </form>
-                                    <form method="post" asp-page-handler="Reject" asp-route-requestId="@request.Id">
-                                        <button type="submit" class="btn btn-danger">Respinge</button>
-                                    </form>
-                                }
-                            </li>
-                        }
-                    </ul>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+@if (Model.MyPosts != null && Model.MyPosts.Any(p => p.Type == PostType.donation))
+{
+    @foreach (var post in Model.MyPosts.Where(p => p.Type == PostType.donation))
+    {
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title">@post.title</h5>
+            </div>
+            <div class="card-body">
+                @if (post.AdoptionRequests != null && post.AdoptionRequests.Any())
+                {
+                    @foreach (var request in post.AdoptionRequests)
+                    {
+                        <div class="border-bottom mb-3">
+                            <p><strong>Locație:</strong> @request.Location</p>
+                            <p><strong>Email:</strong> @request.Email</p>
+                            <p><strong>Număr de telefon:</strong> @request.PhoneNumber</p>
+                            <p><strong>Mesaj:</strong> @request.Message</p>
+                            <p><strong>Stare:</strong> @((request.IsAccepted) ? "Acceptat" : "În așteptare")</p>
+                            @if (!request.IsAccepted)
+                            {
+                                <form method="post" asp-page-handler="Accept" asp-route-requestId="@request.Id">
+                                    <button type="submit" class="btn btn-success">Acceptă</button>
+                                </form>
+                                <form method="post" asp-page-handler="Reject" asp-route-requestId="@request.Id">
+                                    <button type="submit" class="btn btn-danger">Respinge</button>
+                                </form>
+                            }
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p>Nu există cereri pentru această donație.</p>
+                }
+            </div>
+        </div>
+    }
+}
+else
+{
+    <p>Nu există cereri de adopție primite.</p>
+}

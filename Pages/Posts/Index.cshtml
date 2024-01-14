@@ -9,114 +9,97 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="d-inline">Anunturi</h4>
+    <a asp-page="Create" class="btn btn-outline-success">Adauga anunt nou</a>
+</div>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
+<form method="get" class="mb-4">
+    <div class="row">
+        <div class="form-group col">
+            <label for="animalSpeacies" class="mr-2">Specie:</label>
+            <select asp-for="SelectedSpecies" asp-items="Model.SpeciesOptions" class="form-control">
+                <option value="">Dog/Cat</option>
+            </select>
+        </div>
 
+        <div class="form-group col">
+            <label for="animalBreed" class="mr-2">Rasa:</label>
+            <select asp-for="SelectedBreed" asp-items="Model.BreedOptions" class="form-control">
+                <option value="">All Breeds</option>
+            </select>
+        </div>
 
-<form method="get">
-    <label for="animalSpeacies">Select Animal Species:</label>
-    <select asp-for="SelectedSpecies" asp-items="Model.SpeciesOptions">
-        <option value="">Dog/Cat</option>
-    </select>
-    <label for="animalBreed">Select Animal Breed:</label>
-    <select asp-for="SelectedBreed" asp-items="Model.BreedOptions">
-        <option value="">All Breeds</option>
-    </select>
+        <div class="form-group col">
+            <label for="location" class="mr-2">Locatie:</label>
+            <select asp-for="SelectedLocation" asp-items="Model.LocationOptions" class="form-control">
+                <option value="">All Locations</option>
+            </select>
+        </div>
 
-    <label for="location">Select Location:</label>
-    <select asp-for="SelectedLocation" asp-items="Model.LocationOptions">
-        <option value="">All Locations</option>
-    </select>
+        <div class="form-group col">
+            <label for="type" class="mr-2">Tipul postarii:</label>
+            <select asp-for="SelectedType" asp-items="Model.TypeOptions" class="form-control">
+                <option value="">All Types</option>
+            </select>
+        </div>
 
-    <label for="type">Select Type:</label>
-    <select asp-for="SelectedType" asp-items="Model.TypeOptions">
-        <option value="">All Types</option>
-    </select>
-
-    <input type="submit" value="Filter">
+        <div class="form-group col-auto align-self-end">
+            <button type="submit" class="btn btn-primary">Filtrează</button>
+        </div>
+    </div>
 </form>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Image
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Post[0].title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Post[0].description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Post[0].Type)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Post[0].Animal)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Post[0].Location)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Post[0].Animal.animal_breed)
-            </th>
 
+
+<div class="table-responsive">
+
+    <table class="table table-hover table-sm">
+    <thead>
+        <tr class="table-active table-light" style="border-top-left-radius:10px">
+            <th>Imagine</th>
+            <th>Titlu</th>
+            <th>Descriere</th>
+            <th>Tip</th>
+            <th>Animal</th>
+            <th>Locatie</th>
+            <th>Rasa</th>
             <th></th>
         </tr>
     </thead>
-    <tbody id="searchResults">
+    <tbody id="searchResults" class="table-group-divider">
         @foreach (var item in Model.Post)
         {
             <tr>
                 <td>
                     <img src="@item.ImageFile" alt="Post Image" style="max-width: 100px; max-height: 100px;" />
                 </td>
+                <td>@Html.DisplayFor(modelItem => item.title)</td>
+                <td>@Html.DisplayFor(modelItem => item.description)</td>
+                <td>@Html.DisplayFor(modelItem => item.Type)</td>
+                <td>@Html.DisplayFor(modelItem => item.Animal.animal_name)</td>
+                <td>@Html.DisplayFor(modelItem => item.Location)</td>
+                <td>@Html.DisplayFor(modelItem => item.Animal.animal_breed)</td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Type)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Animal.id)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Location)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Animal.animal_breed)
-                </td>
-                <td>
-                    <a asp-page="./Details" asp-route-id="@item.id"> Details </a>
+                    <a asp-page="./Details" asp-route-id="@item.id" class="btn btn-info btn-sm mb-2">Detalii</a>
                     @if (User.Identity.IsAuthenticated && item.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
                     {
-                        <a asp-page="./Edit" asp-route-id="@item.id">Edit</a> 
-                        <a asp-page = "./Delete" asp-route-id = "@item.id" > Delete </a>
-                    } 
-                    else
-                    {
-                        @if (User.Identity.IsAuthenticated && item.Type == PostType.donation)
-                        {
-                            <form asp-page="./Adopt" asp-route-id="@item.id" method="post">
-                                <input type="hidden" name="id" value="@item.id" />
-                                <button type="submit">Adopt</button>
-                            </form>
-
-                        }
+                        <a asp-page="./Edit" asp-route-id="@item.id" class="btn btn-warning btn-sm mb-2">Edit</a>
+                        <a asp-page="./Delete" asp-route-id="@item.id" class="btn btn-danger btn-sm"> Sterge</a>
                     }
-
+                    else if (User.Identity.IsAuthenticated && item.Type == PostType.donation)
+                    {
+                        <form asp-page="./Adopt" asp-route-id="@item.id" method="post">
+                            <input type="hidden" name="id" value="@item.id" />
+                            <button type="submit" class="btn btn-success btn-sm">Adopta</button>
+                        </form>
+                    }
                 </td>
-
             </tr>
         }
     </tbody>
 </table>
+</div>
 
 
 

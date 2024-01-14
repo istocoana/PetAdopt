@@ -1,0 +1,29 @@
+﻿@page
+@model PetAdopt.Pages.PostMessages.SentMessagesModel
+
+<h1>Mesajele Trimise</h1>
+
+@if (Model.SentMessages == null || !Model.SentMessages.Any())
+{
+    <p>Nu ai trimis încă niciun mesaj.</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var message in Model.SentMessages)
+        {
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="/Posts/Details?id=@message.Post.id">@message.Post.title</a>
+                        </h5>
+                        <p class="card-text"><strong>Destinatar:</strong> @message.RecipientId</p>
+                        <p class="card-text"><strong>Mesaj:</strong> @message.MessageContent</p>
+                        <p class="card-text"><strong>Data Trimiterii:</strong> @message.DateSent</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

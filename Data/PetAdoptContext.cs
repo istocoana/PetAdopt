@@ -18,6 +18,7 @@ namespace PetAdopt.Data
 
         public DbSet<PetAdopt.Models.Post> Post { get; set; }
         public DbSet<PetAdopt.Models.AdoptionRequest> AdoptionRequest { get; set; }
+        public DbSet<PetAdopt.Models.PostMessage> PostMessages { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

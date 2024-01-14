@@ -1,6 +1,6 @@
 ﻿@page
 @using System.Security.Claims
-@using PetAdopt.Models;
+@using PetAdopt.Models
 
 @model PetAdopt.Pages.Posts.DetailsModel
 
@@ -8,71 +8,72 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<div class="container">
+    <h1>Details</h1>
 
-<div>
-    <h4>Post</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            Image
-        </dt>
-        <dd class="col-sm-10">
+    <div class="row">
+        <div class="col-md-6">
             @if (!string.IsNullOrEmpty(Model.Post.ImageFile))
             {
-                <img src="@Model.Post.ImageFile" alt="Imaginea postului" style="max-width: 100%;" />
+                <img src="@Model.Post.ImageFile" alt="Imaginea postului" class="img-fluid" />
             }
             else
             {
                 <p>Nu există imagine asociată acestui post.</p>
             }
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Post.title)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Post.title)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Post.description)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Post.description)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Post.Type)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Post.Type)
-        </dd>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Post.Location)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Post.Animal)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Post.Animal.animal_name)
-        </dd>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Post.Animal.animal_age)
-        </dd>
-    </dl>
-</div>
-<div>
-    @if (User.Identity.IsAuthenticated && Model.Post != null && Model.Post.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
-    {
-        <a asp-page="./Edit" asp-route-id="@Model.Post?.id">Edit</a> 
-        <p>|</p>
-        <a asp-page="./Index">Back to List</a>
-    }
-
-    @if (!Model.Post.IsAdopted)
-    {
-        <div>
-            <form method="get" asp-page="./Adopt" asp-route-id="@Model.Post.id">
-                <button type="submit">Adopt</button>
-            </form>
         </div>
-    }
+        <div class="col-md-6">
+            <h4>Post</h4>
+            <hr />
+            <div>
+                <strong>Titlu:</strong>
+                <p>@Html.DisplayFor(model => model.Post.title)</p>
+
+                <strong>Descriere:</strong>
+                <p>@Html.DisplayFor(model => model.Post.description)</p>
+
+                <strong>Tip:</strong>
+                <p>@Html.DisplayFor(model => model.Post.Type)</p>
+
+                <strong>Locație:</strong>
+                <p>@Html.DisplayFor(model => model.Post.Location)</p>
+
+                <strong>Animal:</strong>
+                <p>@Html.DisplayFor(model => model.Post.Animal.animal_name)</p>
+
+                <strong>Vârstă animal:</strong>
+                <p>@Html.DisplayFor(model => model.Post.Animal.animal_age)</p>
+            </div>
+            <div class="mt-4">
+                @if (User.Identity.IsAuthenticated && Model.Post != null && Model.Post.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
+                {
+                    <a asp-page="./Edit" asp-route-id="@Model.Post?.id" class="btn btn-primary">Edit</a>
+                    <a asp-page="./Index" class="btn btn-secondary">Back to List</a>
+                } 
+                else
+                {
+                    @if (!Model.Post.IsAdopted && Model.Post.Type == PostType.donation)
+                    {
+                        <div>
+                            <form method="get" asp-page="./Adopt" asp-route-id="@Model.Post.id">
+                                <button type="submit" class="btn btn-success">Adopt</button>
+                            </form>
+                        </div>
+                    }
+                    @if (Model.Post.Type == PostType.lost || Model.Post.Type == PostType.found)
+                    {
+                        <h3 class="mt-4">Lăsați un mesaj proprietarului anunțului</h3>
+                        <form method="post" asp-page-handler="SendMessage" asp-route-postId="@Model.Post.id">
+                            <div class="form-group">
+                                <textarea rows="4" cols="50" name="messageContent" class="form-control"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Trimiteți mesajul</button>
+                        </form>
+                    }
+                }
+
+               
+            </div>
+        </div>
+    </div>
 </div>
